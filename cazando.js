@@ -108,7 +108,7 @@ function detectarColision() {
         gatoY + ALTURAGATO > comidaY
     ) {
         puntos++;          
-        tiempo = 10;       
+        tiempo = 15;       
         moverComida();     
         actualizarPanel();
     }

@@ -41,3 +41,9 @@ button {
   color: darkred;
   margin-top: 15px;
 }
+body{
+  background-image: url("gatoo.jpg");
+  background-size: cover;
+  background-position: center;
+  
+}
