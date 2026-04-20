@@ -2,14 +2,19 @@ let canvas = document.getElementById("juego");
 let ctx = canvas.getContext("2d");
 
 const VELOCIDAD = 15;
+
 let gatoX = 0;
 let gatoY = 0;
+
 const ANCHOGATO = 50;
 const ALTURAGATO = 50;
+
 let comidaX = 50;
 let comidaY = 50;
+
 const ANCHOCOMIDA = 30;
 const ALTURACOMIDA = 30;
+
 let puntos = 0;
 let tiempo = 10;
 let intervalo;
@@ -36,22 +41,33 @@ function dibujarTodo() {
     graficarGato();
     graficarComida();
 }
+
+// 🔥 FUNCIÓN DE INICIO / REINICIO
 function iniciarJuego() {
+
+    // 🔴 limpiar intervalo anterior
+    clearInterval(intervalo);
+
+    // 🔴 reiniciar variables
     gatoX = (canvas.width / 2) - (ANCHOGATO / 2);
     gatoY = (canvas.height / 2) - (ALTURAGATO / 2);
     puntos = 0;
     tiempo = 10;
 
-    actualizarPanel();
+    // 🔴 mover comida nueva
+    moverComida();
 
+    actualizarPanel();
     dibujarTodo();
 
+    // 🔴 iniciar nuevamente
     intervalo = setInterval(actualizarTiempo, 1000);
+
+    document.getElementById("mensaje").innerText = "";
 }
 
 function mover(direccion) {
-
-    if (tiempo <= 0) return; //  no se mueve si terminó
+    if (tiempo <= 0) return;
 
     if (direccion === "arriba" && gatoY > 0) {
         gatoY -= VELOCIDAD;
@@ -81,38 +97,17 @@ function detectarColision() {
         gatoY + ALTURAGATO > comidaY
     ) {
         puntos++;
+        tiempo = 10;
         moverComida();
         actualizarPanel();
+
+        if (puntos >= 6) {
+            clearInterval(intervalo);
+            alert("🎉 GANASTE 🎉");
+        }
     }
 }
 
-function detectarColision() {
-    if (
-        gatoX < comidaX + ANCHOCOMIDA &&
-        gatoX + ANCHOGATO > comidaX &&
-        gatoY < comidaY + ALTURACOMIDA &&
-        gatoY + ALTURAGATO > comidaY
-    ) 
-    {
-        puntos++;          
-        tiempo = 10;       
-        moverComida();     
-        actualizarPanel();
-    }
-}       
-function detectarColision() {
-    if (
-        gatoX < comidaX + ANCHOCOMIDA &&
-        gatoX + ANCHOGATO > comidaX &&
-        gatoY < comidaY + ALTURACOMIDA &&
-        gatoY + ALTURAGATO > comidaY
-    ) {
-        puntos++;          
-        tiempo = 15;       
-        moverComida();     
-        actualizarPanel();
-    }
-}
 function moverComida() {
     comidaX = Math.random() * (canvas.width - ANCHOCOMIDA);
     comidaY = Math.random() * (canvas.height - ALTURACOMIDA);
@@ -120,26 +115,25 @@ function moverComida() {
 
 function actualizarTiempo() {
     tiempo--;
-
     actualizarPanel();
 
     if (tiempo <= 0) {
         clearInterval(intervalo);
+        alert("💀 GAME OVER");
         document.getElementById("mensaje").innerText = "⛔ Tiempo terminado";
     }
 }
-
 
 function actualizarPanel() {
     document.getElementById("puntos").innerText = puntos;
     document.getElementById("tiempo").innerText = tiempo;
 }
 
-
 document.getElementById("btnArriba").onclick = () => mover("arriba");
 document.getElementById("btnAbajo").onclick = () => mover("abajo");
 document.getElementById("btnIzquierda").onclick = () => mover("izquierda");
 document.getElementById("btnDerecha").onclick = () => mover("derecha");
+document.getElementById("btnReiniciar").onclick = iniciarJuego;
 
-//Iniciar
+// INICIO
 window.onload = iniciarJuego;
