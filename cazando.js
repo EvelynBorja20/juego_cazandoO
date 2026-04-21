@@ -16,7 +16,8 @@ const ANCHOCOMIDA = 30;
 const ALTURACOMIDA = 30;
 
 let puntos = 0;
-let tiempo = 10;
+let tiempo = 15;
+let tiempoMaximo=15
 let intervalo;
 
 function graficarRectangulo(x, y, ancho, alto, color) {
@@ -52,7 +53,10 @@ function iniciarJuego() {
     gatoX = (canvas.width / 2) - (ANCHOGATO / 2);
     gatoY = (canvas.height / 2) - (ALTURAGATO / 2);
     puntos = 0;
-    tiempo = 10;
+    tiempo = 15;
+
+    tiempoMaximo=15
+    tiempo=tiempoMaximo
 
     // 🔴 mover comida nueva
     moverComida();
@@ -97,7 +101,7 @@ function detectarColision() {
         gatoY + ALTURAGATO > comidaY
     ) {
         puntos++;
-        tiempo = 10;
+        tiempo = 15;
         moverComida();
         actualizarPanel();
 
