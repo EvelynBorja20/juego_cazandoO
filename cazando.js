@@ -6,8 +6,8 @@ const VELOCIDAD = 15;
 let gatoX = 0;
 let gatoY = 0;
 
-const ANCHOGATO = 50;
-const ALTURAGATO = 50;
+const ANCHOGATO = 60;
+const ALTURAGATO = 60;
 
 let comidaX = 50;
 let comidaY = 50;
@@ -17,59 +17,65 @@ const ALTURACOMIDA = 30;
 
 let puntos = 0;
 let tiempo = 15;
-let tiempoMaximo=15
+let tiempoMaximo = 15;
 let intervalo;
 
-function graficarRectangulo(x, y, ancho, alto, color) {
-    ctx.fillStyle = color;
-    ctx.fillRect(x, y, ancho, alto);
-}
+// 🐱 IMAGEN DEL GATO (ARREGLADO)
+let imagenGato = new Image();
+imagenGato.src ="garfield.png"
+imagenGato.onload = function () {
+    iniciarJuego();
+};
 
+
+
+// 🔴 RECTÁNGULO (comida)
+let comidaImg = new Image();
+comidaImg.src = "lasaña.png"; // lasaña
+
+
+// 🐱 DIBUJAR GATO
 function graficarGato() {
-    graficarRectangulo(gatoX, gatoY, ANCHOGATO, ALTURAGATO, "#000000");
+    ctx.drawImage(imagenGato, gatoX, gatoY, ANCHOGATO, ALTURAGATO);
 }
 
+// 🍎 COMIDA
 function graficarComida() {
-    graficarRectangulo(comidaX, comidaY, ANCHOCOMIDA, ALTURACOMIDA, "#ff0000");
+    ctx.drawImage(comidaImg, comidaX, comidaY, ANCHOCOMIDA, ALTURACOMIDA);
 }
 
+// 🧹 LIMPIAR
 function limpiarCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
+// 🎮 DIBUJAR TODO
 function dibujarTodo() {
     limpiarCanvas();
     graficarGato();
     graficarComida();
 }
 
-// 🔥 FUNCIÓN DE INICIO / REINICIO
+// 🔥 INICIAR / REINICIAR
 function iniciarJuego() {
-
-    // 🔴 limpiar intervalo anterior
     clearInterval(intervalo);
 
-    // 🔴 reiniciar variables
     gatoX = (canvas.width / 2) - (ANCHOGATO / 2);
     gatoY = (canvas.height / 2) - (ALTURAGATO / 2);
+
     puntos = 0;
-    tiempo = 15;
+    tiempo = tiempoMaximo;
 
-    tiempoMaximo=15
-    tiempo=tiempoMaximo
-
-    // 🔴 mover comida nueva
     moverComida();
-
     actualizarPanel();
     dibujarTodo();
 
-    // 🔴 iniciar nuevamente
     intervalo = setInterval(actualizarTiempo, 1000);
 
     document.getElementById("mensaje").innerText = "";
 }
 
+// 🎯 MOVIMIENTO
 function mover(direccion) {
     if (tiempo <= 0) return;
 
@@ -93,6 +99,7 @@ function mover(direccion) {
     dibujarTodo();
 }
 
+// 💥 COLISIÓN
 function detectarColision() {
     if (
         gatoX < comidaX + ANCHOCOMIDA &&
@@ -101,7 +108,8 @@ function detectarColision() {
         gatoY + ALTURAGATO > comidaY
     ) {
         puntos++;
-        tiempo = 15;
+        tiempo = tiempoMaximo;
+
         moverComida();
         actualizarPanel();
 
@@ -112,11 +120,13 @@ function detectarColision() {
     }
 }
 
+// 📍 NUEVA COMIDA
 function moverComida() {
     comidaX = Math.random() * (canvas.width - ANCHOCOMIDA);
     comidaY = Math.random() * (canvas.height - ALTURACOMIDA);
 }
 
+// ⏱ TIEMPO
 function actualizarTiempo() {
     tiempo--;
     actualizarPanel();
@@ -128,16 +138,15 @@ function actualizarTiempo() {
     }
 }
 
+// 📊 PANEL
 function actualizarPanel() {
     document.getElementById("puntos").innerText = puntos;
     document.getElementById("tiempo").innerText = tiempo;
 }
 
+// 🎮 BOTONES
 document.getElementById("btnArriba").onclick = () => mover("arriba");
 document.getElementById("btnAbajo").onclick = () => mover("abajo");
 document.getElementById("btnIzquierda").onclick = () => mover("izquierda");
 document.getElementById("btnDerecha").onclick = () => mover("derecha");
 document.getElementById("btnReiniciar").onclick = iniciarJuego;
-
-// INICIO
-window.onload = iniciarJuego;
